@@ -1,33 +1,6 @@
-import { isEmpty, isUndefined, set, trim } from 'es-toolkit/compat'
+import { isEmpty, isUndefined, set, transform, trim } from 'es-toolkit/compat'
 
 import { type CleanableArray, type CleanableObject, type CleanerFunction } from '../types/common'
-
-// Custom transform function to replace lodash/fp reduce.convert({ cap: false })
-const transform = (
-  iteratee: (acc: unknown, value: unknown, key: string | number) => unknown,
-  accumulator: unknown,
-  collection: CleanableObject | CleanableArray,
-) => {
-  // Handle objects
-  if (typeof collection === 'object' && !Array.isArray(collection)) {
-    let result = accumulator
-    for (const [key, value] of Object.entries(collection)) {
-      result = iteratee(result, value, key)
-    }
-    return result
-  }
-
-  // Handle arrays
-  if (Array.isArray(collection)) {
-    let result = accumulator
-    for (let i = 0; i < collection.length; i++) {
-      result = iteratee(result, collection[i], i)
-    }
-    return result
-  }
-
-  return accumulator
-}
 
 /**
  * Remove empty values using a transformer function
@@ -49,14 +22,19 @@ export const rmTrue = (transformer: (item: unknown) => boolean) => (item: unknow
  */
 export const reducer = (clean: CleanerFunction) => (result: unknown, value: unknown, key: string | number) => {
   const cleanValue = clean(value, clean)
-  return isUndefined(cleanValue) ? result : set(result || {}, [key], cleanValue)
+  if (isUndefined(cleanValue)) return result
+
+  // Ensure we have a proper object to work with
+  const accumulator = result && typeof result === 'object' && !Array.isArray(result) ? result : {}
+  return set(accumulator, [key], cleanValue)
 }
 
 /**
  * Clean an object by removing empty/undefined properties
  */
 export function cleanObject(obj: CleanableObject, clean: CleanerFunction): unknown {
-  return transform(reducer(clean), undefined, obj)
+  const result = transform(obj, reducer(clean), {})
+  return isEmpty(result) ? undefined : result
 }
 
 /**
