@@ -10,7 +10,7 @@ Sometimes API responses contain properties filled with empty strings, undefined 
 
 - 🧹 **Smart cleaning** - Removes empty strings, undefined values, empty arrays, and functions by default
 - 🔧 **Fully configurable** - Customize how each data type should be processed
-- 📦 **Lightweight** - Small bundle size (ESM: ~30KB, CJS: ~31KB) with tree-shaking support
+- 📦 **Lightweight** - Small bundle size (ESM: ~3.2KB, CJS: ~6.4KB) with tree-shaking support
 - 📱 **Universal** - Works in Node.js, browsers, and edge environments  
 - 🚀 **TypeScript-first** - Full TypeScript support with comprehensive type definitions
 - ⚡ **High performance** - Built on es-toolkit for optimal speed

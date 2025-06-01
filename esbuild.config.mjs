@@ -68,12 +68,16 @@ function copyFiles() {
 // Build ESM version
 async function buildESM() {
   console.log('Building ESM...')
-  await build({
+  const result = await build({
     ...sharedConfig,
     format: 'esm',
     outdir: 'dist/esm',
-    outExtension: { '.js': '.js' }
+    outExtension: { '.js': '.js' },
+    metafile: true
   })
+  
+  // Write metafile to disk
+  writeFileSync('meta-esm.json', JSON.stringify(result.metafile, null, 2))
   
   // Generate TypeScript declarations for ESM
   console.log('Generating TypeScript declarations for ESM...')
@@ -83,12 +87,16 @@ async function buildESM() {
 // Build CJS version
 async function buildCJS() {
   console.log('Building CJS...')
-  await build({
+  const result = await build({
     ...sharedConfig,
     format: 'cjs',
     outdir: 'dist/cjs',
-    outExtension: { '.js': '.js' }
+    outExtension: { '.js': '.js' },
+    metafile: true
   })
+  
+  // Write metafile to disk
+  writeFileSync('meta-cjs.json', JSON.stringify(result.metafile, null, 2))
   
   // Generate TypeScript declarations for CJS
   console.log('Generating TypeScript declarations for CJS...')
