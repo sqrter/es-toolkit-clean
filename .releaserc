@@ -1,11 +1,41 @@
 {
     "branches": [
         "main",
-        { "name": "beta", "channel": "beta", "prerelease": true }
+        {
+            "name": "beta",
+            "channel": "beta",
+            "prerelease": true
+        }
     ],
     "plugins": [
-        "@semantic-release/commit-analyzer",
-        "@semantic-release/release-notes-generator",
+        [
+            "@semantic-release/commit-analyzer",
+            {
+                "preset": "conventionalcommits",
+                "releaseRules": [
+                    {
+                        "type": "build",
+                        "scope": "deps",
+                        "release": "patch"
+                    }
+                ]
+            }
+        ],
+        [
+            "@semantic-release/release-notes-generator",
+            {
+                "preset": "conventionalcommits",
+                "presetConfig": {
+                    "types": [
+                        {
+                            "type": "build",
+                            "section": "Dependencies and Other Build Updates",
+                            "hidden": false
+                        }
+                    ]
+                }
+            }
+        ],
         [
             "@semantic-release/changelog",
             {
@@ -28,7 +58,9 @@
         [
             "@semantic-release/git",
             {
-                "assets": ["changelog.md"]
+                "assets": [
+                    "changelog.md"
+                ]
             }
         ]
     ]
