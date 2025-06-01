@@ -1,4 +1,4 @@
-import { identity, noop } from 'es-toolkit/compat'
+import { identity, noop } from 'es-toolkit/function'
 
 import { cleanArray, cleanObject, cleanString } from '../utils/helpers'
 

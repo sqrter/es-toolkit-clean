@@ -1,4 +1,4 @@
-import { defaults, isFunction } from 'es-toolkit/compat'
+import { isFunction } from 'es-toolkit/predicate'
 
 import { type CleanerFunction } from '../types/common'
 import { isArray, isBoolean, isDate, isNull, isNumber, isPlainObject, isString, isUndefined } from '../types/validators'
@@ -9,7 +9,7 @@ import { defaultProcessors, type ProcessorConfig } from './processors'
  * This replaces the old "buildGetValue" function with a clearer name
  */
 export function createProcessor(processorConfig: Partial<ProcessorConfig> = {}): CleanerFunction {
-  const processors = defaults(processorConfig, defaultProcessors)
+  const processors = { ...defaultProcessors, ...processorConfig }
 
   return function processValue(node: unknown, clean: CleanerFunction): unknown {
     if (isArray(node)) return processors.isArray(node as unknown[], clean)
