@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/sqrter/es-toolkit-clean/compare/v1.1.1...v1.1.2) (2025-06-01)
+
+
+### Performance Improvements
+
+* **refactor:** ⚡️ ♻️ 🛠️ get rid of `es-toolkit/compat` imports ([e73dd2a](https://github.com/sqrter/es-toolkit-clean/commit/e73dd2ae9a00711c73254080a3462f92a33579e0))
+
 ## [1.1.1](https://github.com/sqrter/es-toolkit-clean/compare/v1.1.0...v1.1.1) (2025-06-01)
 
 
