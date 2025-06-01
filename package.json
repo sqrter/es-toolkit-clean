@@ -78,7 +78,12 @@
   },
   "size-limit": [
     {
-      "path": "dist/*.js"
+      "name": "ESM Entry Point",
+      "path": "dist/esm/index.js"
+    },
+    {
+      "name": "CJS Entry Point",
+      "path": "dist/cjs/index.js"
     }
   ],
   "packageManager": "pnpm@10.3.0",
