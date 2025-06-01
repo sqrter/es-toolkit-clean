@@ -1,19 +1,16 @@
 import { describe, expect, test } from 'vitest'
 
 import {
+  isArguments,
   isArray,
-  isBoolean,
-  isDate,
+  isArrayLike,
+  isEmpty,
   isEmptyArr,
   isEmptyArray,
   isEmptyObject,
   isEmptyString,
-  isFunction,
-  isNull,
   isNumber,
-  isPlainObject,
-  isString,
-  isUndefined,
+  isPrototype,
   rejectEmpty,
 } from '../src/types/validators'
 
@@ -26,58 +23,6 @@ describe('Type checking validators', () => {
       expect(isArray({})).toBe(false)
       expect(isArray('array')).toBe(false)
       expect(isArray(null)).toBe(false)
-    })
-  })
-
-  describe('isBoolean', () => {
-    test('should identify booleans correctly', () => {
-      expect(isBoolean(true)).toBe(true)
-      expect(isBoolean(false)).toBe(true)
-      expect(isBoolean(Boolean(1))).toBe(true)
-      expect(isBoolean(1)).toBe(false)
-      expect(isBoolean('true')).toBe(false)
-      expect(isBoolean(null)).toBe(false)
-    })
-  })
-
-  describe('isDate', () => {
-    test('should identify dates correctly', () => {
-      expect(isDate(new Date())).toBe(true)
-      expect(isDate(new Date('2023-01-01'))).toBe(true)
-      expect(isDate(Date.now())).toBe(false)
-      expect(isDate('2023-01-01')).toBe(false)
-      expect(isDate(null)).toBe(false)
-    })
-  })
-
-  describe('isFunction', () => {
-    test('should identify functions correctly', () => {
-      expect(
-        isFunction(() => {
-          // empty function
-        }),
-      ).toBe(true)
-      expect(
-        isFunction(function () {
-          // empty function
-        }),
-      ).toBe(true)
-      expect(isFunction(() => Promise.resolve())).toBe(true)
-      expect(isFunction(Date)).toBe(true)
-      expect(isFunction('function')).toBe(false)
-      expect(isFunction({})).toBe(false)
-      expect(isFunction(null)).toBe(false)
-    })
-  })
-
-  describe('isNull', () => {
-    test('should identify null correctly', () => {
-      expect(isNull(null)).toBe(true)
-      expect(isNull(undefined)).toBe(false)
-      expect(isNull(0)).toBe(false)
-      expect(isNull('')).toBe(false)
-      expect(isNull(false)).toBe(false)
-      expect(isNull({})).toBe(false)
     })
   })
 
@@ -94,36 +39,111 @@ describe('Type checking validators', () => {
     })
   })
 
-  describe('isPlainObject', () => {
-    test('should identify plain objects correctly', () => {
-      expect(isPlainObject({})).toBe(true)
-      expect(isPlainObject({ key: 'value' })).toBe(true)
-      expect(isPlainObject(Object.create(null))).toBe(true)
-      expect(isPlainObject([])).toBe(false)
-      expect(isPlainObject(new Date())).toBe(false)
-      expect(isPlainObject(null)).toBe(false)
+  describe('isArguments', () => {
+    test('should identify arguments objects correctly', () => {
+      const args = (function () {
+        // eslint-disable-next-line prefer-rest-params
+        return arguments
+      })()
+      const strictArgs = (function () {
+        'use strict'
+        // eslint-disable-next-line prefer-rest-params
+        return arguments
+      })()
+
+      expect(isArguments(args)).toBe(true)
+      expect(isArguments(strictArgs)).toBe(true)
+      expect(isArguments([1, 2, 3])).toBe(false)
+      expect(isArguments({})).toBe(false)
+      expect(isArguments(null)).toBe(false)
+      expect(isArguments()).toBe(false)
     })
   })
 
-  describe('isString', () => {
-    test('should identify strings correctly', () => {
-      expect(isString('')).toBe(true)
-      expect(isString('hello')).toBe(true)
-      expect(isString(String('test'))).toBe(true)
-      expect(isString(42)).toBe(false)
-      expect(isString(null)).toBe(false)
-      expect(isString({})).toBe(false)
+  describe('isArrayLike', () => {
+    test('should identify array-like objects correctly', () => {
+      expect(isArrayLike([1, 2, 3])).toBe(true)
+      expect(isArrayLike('abc')).toBe(true)
+      expect(isArrayLike({ 0: 'a', length: 1 })).toBe(true)
+      expect(isArrayLike({ length: 0 })).toBe(true)
+      expect(isArrayLike({})).toBe(false)
+      expect(isArrayLike(null)).toBe(false)
+      expect(isArrayLike()).toBe(false)
+      expect(isArrayLike(() => undefined)).toBe(false)
     })
   })
 
-  describe('isUndefined', () => {
-    test('should identify undefined correctly', () => {
-      expect(isUndefined(undefined)).toBe(true)
-      expect(isUndefined(void 0)).toBe(true)
-      expect(isUndefined(null)).toBe(false)
-      expect(isUndefined('')).toBe(false)
-      expect(isUndefined(0)).toBe(false)
-      expect(isUndefined(false)).toBe(false)
+  describe('isEmpty', () => {
+    test('should identify empty values correctly', () => {
+      expect(isEmpty()).toBe(true)
+      expect(isEmpty(null)).toBe(true)
+      expect(isEmpty()).toBe(true)
+      expect(isEmpty('')).toBe(true)
+      expect(isEmpty([])).toBe(true)
+      expect(isEmpty({})).toBe(true)
+      expect(isEmpty(new Map())).toBe(true)
+      expect(isEmpty(new Set())).toBe(true)
+
+      expect(isEmpty('hello')).toBe(false)
+      expect(isEmpty([1, 2, 3])).toBe(false)
+      expect(isEmpty({ a: 1 })).toBe(false)
+      expect(isEmpty(new Map([['key', 'value']]))).toBe(false)
+      expect(isEmpty(new Set([1, 2, 3]))).toBe(false)
+    })
+
+    test('should handle array-like objects with special conditions', () => {
+      // Test the specific branches in isEmpty that check for array-like behavior
+      const arrayLikeWithoutSplice = { 0: 'a', 1: 'b', length: 2 }
+      expect(isEmpty(arrayLikeWithoutSplice)).toBe(false)
+
+      // Test with actual arguments object
+      const args = (function (...params) {
+        return params
+      })(1, 2, 3)
+      expect(isEmpty(args)).toBe(false)
+
+      // Test with empty arguments
+      const emptyArgs = (function (...params) {
+        return params
+      })()
+      expect(isEmpty(emptyArgs)).toBe(true)
+    })
+
+    test('should handle prototype objects', () => {
+      class TestConstructor {
+        customProp?: string
+      }
+      TestConstructor.prototype.customProp = 'test'
+
+      const proto = TestConstructor.prototype
+      expect(isEmpty(proto)).toBe(false) // Has customProp
+
+      // Test empty prototype (only constructor)
+      function EmptyConstructor(): void {
+        // Empty constructor for testing
+      }
+      expect(isEmpty(EmptyConstructor.prototype)).toBe(true)
+    })
+  })
+
+  describe('isPrototype', () => {
+    test('should identify prototype objects correctly', () => {
+      class TestConstructor {
+        // Constructor for testing prototypes
+      }
+      expect(isPrototype(TestConstructor.prototype)).toBe(true)
+      expect(isPrototype(Object.prototype)).toBe(true)
+      expect(isPrototype(Array.prototype)).toBe(true)
+
+      expect(isPrototype({})).toBe(false)
+      expect(isPrototype([])).toBe(false)
+      const testInstance: object = new TestConstructor()
+      expect(isPrototype(testInstance)).toBe(false)
+    })
+
+    test('should handle objects without constructor', () => {
+      const objWithoutConstructor = Object.create(null) as object
+      expect(isPrototype(objWithoutConstructor)).toBe(false)
     })
   })
 })

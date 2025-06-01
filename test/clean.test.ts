@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { cleanArray, cleanObject, cleanString, reducer, rmEmpty, rmTrue } from '../src'
+import { cleanArray, cleanObject, cleanString, rmEmpty, rmTrue } from '../src'
 import { createProcessor } from '../src/core/cleaner'
 
 describe('cleanString', () => {
@@ -174,56 +174,5 @@ describe('rmTrue', () => {
     expect(rmZeros(0)).toBe(undefined)
     expect(rmZeros(-1)).toBe(-1)
     expect(rmZeros('0')).toBe('0')
-  })
-})
-
-describe('reducer', () => {
-  const mockProcessor = createProcessor()
-  const cleanReducer = reducer(mockProcessor)
-
-  test('should build clean object by reducing properties', () => {
-    let result: unknown = {}
-    result = cleanReducer(result, 'value', 'key1')
-    result = cleanReducer(result, '', 'key2') // should be removed
-    result = cleanReducer(result, 42, 'key3')
-    result = cleanReducer(result, ' ', 'key4') // should be removed
-
-    expect(result).toEqual({
-      key1: 'value',
-      key3: 42,
-    })
-  })
-
-  test('should handle undefined result accumulator', () => {
-    let result: unknown = undefined
-    result = cleanReducer(result, 'value', 'key1')
-    result = cleanReducer(result, 42, 'key2')
-
-    expect(result).toEqual({
-      key1: 'value',
-      key2: 42,
-    })
-  })
-
-  test('should skip undefined cleaned values', () => {
-    let result: unknown = {}
-    result = cleanReducer(result, 'value', 'key1')
-    result = cleanReducer(result, undefined, 'key2')
-    result = cleanReducer(result, null, 'key3')
-
-    expect(result).toEqual({
-      key1: 'value',
-      key3: null,
-    })
-  })
-
-  test('should handle nested property paths', () => {
-    let result: unknown = {}
-    result = cleanReducer(result, 'value', 'nested.key')
-
-    // Note: The reducer uses literal key names, not nested paths
-    expect(result).toEqual({
-      'nested.key': 'value',
-    })
   })
 })

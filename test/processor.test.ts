@@ -1,4 +1,4 @@
-import { noop } from 'es-toolkit/compat'
+import { noop } from 'es-toolkit'
 import { describe, expect, test } from 'vitest'
 
 import { createProcessor, processValue } from '../src'

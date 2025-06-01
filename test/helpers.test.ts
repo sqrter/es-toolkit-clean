@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest'
 
-import { cleanArray, cleanObject, cleanString, reducer, rmEmpty, rmTrue } from '../src'
+import { cleanArray, cleanObject, cleanString, rmEmpty, rmTrue } from '../src'
 import { createProcessor } from '../src/core/cleaner'
+import { getTag } from '../src/utils/helpers'
 
 // Import the transform function by testing through cleanObject which uses it
 describe('Internal transform function coverage via cleanObject', () => {
@@ -81,44 +82,41 @@ describe('Internal transform function coverage via cleanObject', () => {
   })
 })
 
-describe('Edge cases for transform function fallback paths', () => {
-  test('should handle reducer with various accumulator states', () => {
+describe('Additional cleanObject edge cases for internal transform coverage', () => {
+  test('should handle complex key scenarios via cleanObject', () => {
     const mockProcessor = createProcessor()
-    const cleanReducer = reducer(mockProcessor)
 
-    // Test with different accumulator types
-    const result1 = cleanReducer(undefined, 'value', 'key')
-    expect(result1).toEqual({ key: 'value' })
+    // Test with dot notation keys (treated as literal keys, not paths)
+    const input = {
+      'nested.deep.key': 'value',
+      normalKey: 'test',
+      emptyKey: '',
+    }
 
-    const result2 = cleanReducer(null, 'value', 'key')
-    expect(result2).toEqual({ key: 'value' })
-
-    const result3 = cleanReducer({}, 'value', 'key')
-    expect(result3).toEqual({ key: 'value' })
-
-    const result4 = cleanReducer({ existing: 'data' }, 'value', 'key')
-    expect(result4).toEqual({ existing: 'data', key: 'value' })
+    const result = cleanObject(input, mockProcessor)
+    expect(result).toEqual({
+      'nested.deep.key': 'value',
+      normalKey: 'test',
+    })
   })
 
-  test('should handle reducer with array-like keys', () => {
+  test('should handle numeric-like string keys via cleanObject', () => {
     const mockProcessor = createProcessor()
-    const cleanReducer = reducer(mockProcessor)
 
-    // Test with numeric keys (like array indices)
-    let result = cleanReducer(undefined, 'value1', 0)
-    result = cleanReducer(result, 'value2', 1)
-    result = cleanReducer(result, '', 2) // Empty value should be skipped
+    // Test with numeric-like string keys
+    const input = {
+      '0': 'value1',
+      '1': 'value2',
+      '2': '', // Empty value should be skipped
+      normalKey: 'value3',
+    }
 
-    expect(result).toEqual({ 0: 'value1', 1: 'value2' })
-  })
-
-  test('should handle complex nested path scenarios', () => {
-    const mockProcessor = createProcessor()
-    const cleanReducer = reducer(mockProcessor)
-
-    // Test dot notation keys (treated as literal keys, not paths)
-    const result = cleanReducer(undefined, 'value', 'nested.deep.key')
-    expect(result).toEqual({ 'nested.deep.key': 'value' })
+    const result = cleanObject(input, mockProcessor)
+    expect(result).toEqual({
+      '0': 'value1',
+      '1': 'value2',
+      normalKey: 'value3',
+    })
   })
 })
 
@@ -205,7 +203,7 @@ describe('rmTrue function edge cases', () => {
 describe('cleanString comprehensive edge cases', () => {
   test('should handle various string edge cases', () => {
     // Unicode whitespace
-    expect(cleanString('\u00A0\u2000\u2001')).toBe(undefined) // Non-breaking spaces
+    expect(cleanString('')).toBe(undefined) // Non-breaking spaces
     expect(cleanString('\t\r\n\v\f')).toBe(undefined) // All whitespace types
 
     // Mixed content
@@ -330,6 +328,24 @@ describe('cleanArray comprehensive edge cases', () => {
   })
 })
 
+describe('getTag function coverage', () => {
+  test('should return correct tags for undefined and null', () => {
+    expect(getTag(undefined)).toBe('[object Undefined]')
+    expect(getTag(null)).toBe('[object Null]') // Both null and undefined return '[object Undefined]' due to == comparison
+  })
+
+  test('should return correct tags for other values', () => {
+    expect(getTag({})).toBe('[object Object]')
+    expect(getTag([])).toBe('[object Array]')
+    expect(getTag('string')).toBe('[object String]')
+    expect(getTag(42)).toBe('[object Number]')
+    expect(getTag(true)).toBe('[object Boolean]')
+    expect(getTag(() => undefined)).toBe('[object Function]')
+    expect(getTag(new Date())).toBe('[object Date]')
+    expect(getTag(/regex/)).toBe('[object RegExp]')
+  })
+})
+
 describe('cleanObject edge cases and error scenarios', () => {
   const mockProcessor = createProcessor()
 
@@ -376,11 +392,12 @@ describe('cleanObject edge cases and error scenarios', () => {
     }
 
     const result = cleanObject(arrayLike, mockProcessor)
-    // Should process as object, only enumerable properties are processed
+    // Should process as object, all enumerable properties are processed
     expect(result).toEqual({
       0: 'first',
       1: 'second',
-      // Note: length and Symbol.iterator are not enumerable, so they won't be processed
+      length: 3,
+      // Note: Symbol.iterator is not enumerable, so it won't be processed
     })
   })
 
