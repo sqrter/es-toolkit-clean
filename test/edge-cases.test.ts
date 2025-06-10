@@ -3,12 +3,52 @@ import { describe, expect, test } from 'vitest'
 import clean, { createCleaner, createProcessor, processValue } from '../src'
 import { defaultProcessors } from '../src/core/processors'
 
+class TestUser {
+  constructor(
+    public name: string,
+    public email: string,
+    public role: string,
+  ) {}
+}
+
+class TestApiResponse {
+  constructor(
+    public data: unknown,
+    public status: string,
+    public metadata: Record<string, unknown>,
+  ) {}
+}
+
 describe('Edge cases and error scenarios', () => {
   describe('Circular references', () => {
     test('should handle simple objects without circular references', () => {
       const obj = { name: 'test', value: ' cleaned ' }
       const result = clean(obj)
       expect(result).toEqual({ name: 'test', value: 'cleaned' })
+    })
+
+    test('should handle class instances without circular references', () => {
+      const user = new TestUser('John Doe', '', 'admin')
+      const response = new TestApiResponse({ items: [1, 2, 3], empty: '' }, 'success', {
+        version: '',
+        source: 'api',
+        timestamp: Date.now(),
+      })
+
+      const result = createCleaner({ isNull: <T>(_x: T) => undefined as T })(response) as Record<string, unknown>
+      expect(result).toEqual({
+        data: { items: [1, 2, 3] },
+        status: 'success',
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        metadata: { source: 'api', timestamp: expect.any(Number) },
+      } as Record<string, unknown>)
+
+      // Test individual class instance
+      const cleanUser = clean(user) as Record<string, unknown>
+      expect(cleanUser).toEqual({
+        name: 'John Doe',
+        role: 'admin',
+      })
     })
 
     test('should handle arrays without circular references', () => {

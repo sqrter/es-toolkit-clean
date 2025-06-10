@@ -13,6 +13,7 @@ export const defaultProcessors = {
   isFunction: noop as (_?: unknown) => boolean | void,
   isNull: identity,
   isNumber: identity,
+  isObjectLike: cleanObject,
   isPlainObject: cleanObject,
   isString: cleanString,
   isUndefined: noop as (_?: unknown) => boolean | void,
