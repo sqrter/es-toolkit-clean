@@ -1,7 +1,7 @@
 import { isBoolean, isDate, isFunction, isNull, isPlainObject, isString, isUndefined } from 'es-toolkit/predicate'
 
 import { type CleanerFunction } from '../types/common'
-import { isArray, isNumber } from '../types/validators'
+import { isArray, isNumber, isObjectLike } from '../types/validators'
 import { defaultProcessors, type ProcessorConfig } from './processors'
 
 /**
@@ -13,6 +13,7 @@ export function createProcessor(processorConfig: Partial<ProcessorConfig> = {}):
 
   return function processValue(node: unknown, clean: CleanerFunction): unknown {
     if (isArray(node)) return processors.isArray(node, clean)
+    if (isObjectLike(node)) return processors.isObjectLike(node, clean)
     if (isPlainObject(node)) return processors.isPlainObject(node as Record<string, unknown>, clean)
     if (isUndefined(node)) return processors.isUndefined(node)
     if (isFunction(node)) return processors.isFunction(node)

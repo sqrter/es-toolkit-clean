@@ -10,7 +10,7 @@ Sometimes API responses contain properties filled with empty strings, undefined 
 
 - 🧹 **Smart cleaning** - Removes empty strings, undefined values, empty arrays, and functions by default
 - 🔧 **Fully configurable** - Customize how each data type should be processed
-- 📦 **Lightweight** - Small bundle size (ESM: ~3.95KB, CJS: ~7.08KB) uncompressed.
+- 📦 **Lightweight** - Small bundle size (ESM: ~4.21KB, CJS: ~7.37KB) uncompressed.
 - 📱 **Universal** - Works in Node.js, browsers, and edge environments  
 - 🚀 **TypeScript-first** - Full TypeScript support with comprehensive type definitions
 - ⚡ **High performance** - Built on es-toolkit for optimal speed
@@ -175,6 +175,7 @@ const config = {
   isFunction: noop,          // Remove all functions
   isNull: identity,          // Keep all null values
   isNumber: identity,        // Keep all number values (including 0)
+  isObjectLike: cleanObject,  // Clean class instances, convert to plain objects
   isPlainObject: cleanObject, // Recursively clean objects, remove if empty  
   isString: cleanString,     // Trim whitespace, remove if empty
   isUndefined: noop,         // Remove all undefined values
@@ -298,6 +299,83 @@ const cleanedNested = clean(nested)
 // → { level1: { level2: { level3: { keep: 'this' } } } }
 ```
 
+### Class Instance Cleaning
+
+The library automatically handles class instances by converting them to plain objects while cleaning their properties:
+
+```javascript
+import clean, { createCleaner } from 'es-toolkit-clean'
+
+class User {
+  constructor(data) {
+    this.name = data.name
+    this.email = data.email
+    this.role = data.role
+  }
+}
+
+class ApiResponse {
+  constructor(data) {
+    this.user = new User(data.user)
+    this.metadata = data.metadata
+    this.timestamp = new Date()
+  }
+}
+
+const response = new ApiResponse({
+  user: {
+    name: 'John',
+    email: '',        // Empty string - will be removed
+    role: 'admin'
+  },
+  metadata: {
+    version: '',      // Empty string - will be removed  
+    source: 'api'
+  }
+})
+
+const cleaned = clean(response)
+console.log(cleaned)
+// Output: Plain object (not ApiResponse instance)
+// {
+//   user: { name: 'John', role: 'admin' },
+//   metadata: { source: 'api' },
+//   timestamp: 2025-06-10T12:00:00.000Z
+// }
+
+// Class instances become plain objects
+console.log(cleaned.constructor.name) // → 'Object'
+console.log(response.constructor.name) // → 'ApiResponse'
+```
+
+The library intelligently distinguishes between:
+- **Class instances** (converted to plain objects and cleaned)
+- **Plain objects** (cleaned in place)
+- **Special objects** (Date, RegExp, Map, Set, Error - preserved as-is)
+
+```javascript
+import clean from 'es-toolkit-clean'
+
+const mixed = {
+  classInstance: new User({ name: 'test', email: '' }),
+  plainObject: { value: 'keep', empty: '' },
+  date: new Date(),
+  regex: /pattern/g,
+  map: new Map([['key', 'value']]),
+  set: new Set([1, 2, 3])
+}
+
+const result = clean(mixed)
+// → {
+//     classInstance: { name: 'test' },  // Class → plain object, cleaned
+//     plainObject: { value: 'keep' },   // Plain object, cleaned
+//     date: 2025-06-10T12:00:00.000Z,   // Date preserved
+//     regex: /pattern/g,                // RegExp preserved
+//     map: Map(1) { 'key' => 'value' }, // Map preserved
+//     set: Set(3) { 1, 2, 3 }           // Set preserved
+//   }
+```
+
 ## Helper Functions
 
 The library also exports individual helper functions for specific use cases:
@@ -407,6 +485,7 @@ pnpm lint
 | `isFunction` | `(fn: Function) => unknown` | Remove all functions | ✅ |
 | `isNull` | `(val: null) => unknown` | Keep all nulls | ✅ |
 | `isNumber` | `(num: number) => unknown` | Keep all numbers | ✅ |
+| `isObjectLike` | `(obj: Record<string, unknown>, clean: CleanerFunction) => unknown` | Clean class instances, convert to plain objects | ✅ |
 | `isPlainObject` | `(obj: Record<string, unknown>, clean: CleanerFunction) => unknown` | Recursively clean, remove if empty | ✅ |
 | `isString` | `(str: string) => unknown` | Trim, remove if empty | ✅ |
 | `isUndefined` | `(val: undefined) => unknown` | Remove all undefined | ✅ |

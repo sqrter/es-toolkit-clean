@@ -166,3 +166,29 @@ export const rejectEmpty = (arr: unknown[]): unknown[] =>
  * Note: Only does one level of recursion
  */
 export const isEmptyArray = (value: unknown): boolean => isArray(value) && isEmpty(compact(rejectEmpty(value)))
+
+/**
+ * Checks if a value is object-like (includes both plain objects and class instances)
+ * This is more inclusive than isPlainObject and will catch class instances
+ * but excludes special JavaScript objects like Date, RegExp, Map, Set, etc.
+ */
+export function isObjectLike(value: unknown): value is Record<string, unknown> {
+  if (value === null || typeof value !== 'object' || isArray(value) || isArguments(value)) {
+    return false
+  }
+
+  // Exclude special JavaScript objects that should not be treated as generic objects
+  if (
+    value instanceof Date ||
+    value instanceof RegExp ||
+    value instanceof Map ||
+    value instanceof Set ||
+    value instanceof Error ||
+    value instanceof Promise
+  ) {
+    return false
+  }
+
+  // Exclude plain objects (let isPlainObject handle those)
+  return !isPlainObject(value)
+}
