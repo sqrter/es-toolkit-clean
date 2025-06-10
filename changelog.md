@@ -1,3 +1,16 @@
+## 1.2.0 (2025-06-10)
+
+* chore(deps-dev) ([bb01ceb](https://github.com/sqrter/es-toolkit-clean/commit/bb01ceb))
+* Merge branch 'main' into isObjectLike ([09c2a6e](https://github.com/sqrter/es-toolkit-clean/commit/09c2a6e))
+* Merge pull request #13 from sqrter/dependabot/npm_and_yarn/dev-deps-bb593898ee ([29c8b2a](https://github.com/sqrter/es-toolkit-clean/commit/29c8b2a)), closes [#13](https://github.com/sqrter/es-toolkit-clean/issues/13)
+* Merge pull request #16 from sqrter/isObjectLike ([9f12bf7](https://github.com/sqrter/es-toolkit-clean/commit/9f12bf7)), closes [#16](https://github.com/sqrter/es-toolkit-clean/issues/16)
+* feat(isObjectLike): ✨ cleaning functionality for class instances ([4944df6](https://github.com/sqrter/es-toolkit-clean/commit/4944df6))
+* chore(dependabot): 🔧 add configuration for npm updates with weekly schedule ([db35659](https://github.com/sqrter/es-toolkit-clean/commit/db35659))
+* chore(dependabot): 🔧 update configuration to include groups for development and production deps ([cb6d42f](https://github.com/sqrter/es-toolkit-clean/commit/cb6d42f))
+* chore(deps-dev): bump the dev-deps group with 16 updates ([34867af](https://github.com/sqrter/es-toolkit-clean/commit/34867af))
+* chore(deps-dev): bump the dev-deps group with 2 updates ([6a32d3d](https://github.com/sqrter/es-toolkit-clean/commit/6a32d3d))
+* chore(deps-dev): bump the dev-deps group with 4 updates ([64afab6](https://github.com/sqrter/es-toolkit-clean/commit/64afab6))
+
 ## [1.1.2](https://github.com/sqrter/es-toolkit-clean/compare/v1.1.1...v1.1.2) (2025-06-01)
 
 
