@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      es-toolkit:
-        specifier: ^1.38.0
-        version: 1.38.0
     devDependencies:
       '@commitlint/cli':
         specifier: ^20.1.0
@@ -19,16 +15,16 @@ importers:
         specifier: ^20.0.0
         version: 20.0.0
       '@eslint/compat':
-        specifier: ^1.2.9
+        specifier: ^1.4.0
         version: 1.4.0(eslint@9.37.0(jiti@2.6.1))
       '@eslint/eslintrc':
         specifier: ^3.3.1
         version: 3.3.1
       '@eslint/js':
-        specifier: ^9.28.0
+        specifier: ^9.37.0
         version: 9.37.0
       '@ianvs/prettier-plugin-sort-imports':
-        specifier: ^4.4.2
+        specifier: ^4.7.0
         version: 4.7.0(prettier@3.6.2)
       '@semantic-release/changelog':
         specifier: ^6.0.3
@@ -37,10 +33,10 @@ importers:
         specifier: ^10.0.1
         version: 10.0.1(semantic-release@24.2.9(typescript@5.9.3))
       '@size-limit/preset-big-lib':
-        specifier: ^11.1.6
+        specifier: ^11.2.0
         version: 11.2.0(esbuild@0.25.10)(size-limit@11.2.0)
       '@types/node':
-        specifier: ^24.0.3
+        specifier: ^24.7.2
         version: 24.7.2
       '@vitest/coverage-v8':
         specifier: 3.2.4
@@ -54,29 +50,32 @@ importers:
       devmoji:
         specifier: ^2.3.0
         version: 2.3.0
+      es-toolkit:
+        specifier: ^1.40.0
+        version: 1.40.0
       esbuild:
-        specifier: ^0.25.5
+        specifier: ^0.25.10
         version: 0.25.10
       eslint:
-        specifier: ^9.28.0
+        specifier: ^9.37.0
         version: 9.37.0(jiti@2.6.1)
       eslint-config-prettier:
-        specifier: ^10.1.5
+        specifier: ^10.1.8
         version: 10.1.8(eslint@9.37.0(jiti@2.6.1))
       eslint-plugin-import:
-        specifier: ^2.31.0
+        specifier: ^2.32.0
         version: 2.32.0(@typescript-eslint/parser@8.46.0(eslint@9.37.0(jiti@2.6.1))(typescript@5.9.3))(eslint@9.37.0(jiti@2.6.1))
       eslint-plugin-prettier:
-        specifier: ^5.4.1
+        specifier: ^5.5.4
         version: 5.5.4(@types/eslint@9.6.1)(eslint-config-prettier@10.1.8(eslint@9.37.0(jiti@2.6.1)))(eslint@9.37.0(jiti@2.6.1))(prettier@3.6.2)
       eslint-plugin-sonarjs:
-        specifier: ^3.0.2
+        specifier: ^3.0.5
         version: 3.0.5(eslint@9.37.0(jiti@2.6.1))
       eslint-plugin-unused-imports:
-        specifier: ^4.1.4
+        specifier: ^4.2.0
         version: 4.2.0(@typescript-eslint/eslint-plugin@8.46.0(@typescript-eslint/parser@8.46.0(eslint@9.37.0(jiti@2.6.1))(typescript@5.9.3))(eslint@9.37.0(jiti@2.6.1))(typescript@5.9.3))(eslint@9.37.0(jiti@2.6.1))
       glob:
-        specifier: ^11.0.2
+        specifier: ^11.0.3
         version: 11.0.3
       husky:
         specifier: ^9.1.7
@@ -85,40 +84,40 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0
       lint-staged:
-        specifier: ^16.1.0
+        specifier: ^16.2.4
         version: 16.2.4
       open:
-        specifier: ^10.1.0
+        specifier: ^10.2.0
         version: 10.2.0
       prettier:
-        specifier: ^3.5.3
+        specifier: ^3.6.2
         version: 3.6.2
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
       semantic-release:
-        specifier: ^24.2.2
+        specifier: ^24.2.9
         version: 24.2.9(typescript@5.9.3)
       size-limit:
-        specifier: ^11.1.6
+        specifier: ^11.2.0
         version: 11.2.0
       tslib:
         specifier: ^2.8.1
         version: 2.8.1
       tsx:
-        specifier: ^4.19.2
+        specifier: ^4.20.6
         version: 4.20.6
       typescript:
-        specifier: ^5.7.3
+        specifier: ^5.9.3
         version: 5.9.3
       typescript-eslint:
-        specifier: ^8.33.0
+        specifier: ^8.46.0
         version: 8.46.0(eslint@9.37.0(jiti@2.6.1))(typescript@5.9.3)
       vite-tsconfig-paths:
         specifier: ^5.1.4
         version: 5.1.4(typescript@5.9.3)(vite@7.0.0(@types/node@24.7.2)(jiti@2.6.1)(terser@5.40.0)(tsx@4.20.6)(yaml@2.8.1))
       vitest:
-        specifier: ^3.0.5
+        specifier: ^3.2.4
         version: 3.2.4(@types/node@24.7.2)(jiti@2.6.1)(terser@5.40.0)(tsx@4.20.6)(yaml@2.8.1)
 
 packages:
@@ -1695,8 +1694,8 @@ packages:
     resolution: {integrity: sha512-w+5mJ3GuFL+NjVtJlvydShqE1eN3h3PbI7/5LAsYJP/2qtuMXjfL2LpHSRqo4b4eSF5K/DH1JXKUAHSB2UW50g==}
     engines: {node: '>= 0.4'}
 
-  es-toolkit@1.38.0:
-    resolution: {integrity: sha512-OT3AxczYYd3W50bCj4V0hKoOAfqIy9tof0leNQYekEDxVKir3RTVTJOLij7VAe6fsCNsGhC0JqIkURpMXTCSEA==}
+  es-toolkit@1.40.0:
+    resolution: {integrity: sha512-8o6w0KFmU0CiIl0/Q/BCEOabF2IJaELM1T2PWj6e8KqzHv1gdx+7JtFnDwOx1kJH/isJ5NwlDG1nCr1HrRF94Q==}
 
   esbuild@0.25.10:
     resolution: {integrity: sha512-9RiGKvCwaqxO2owP61uQ4BgNborAQskMR6QusfWzQqv7AZOg5oGehdY2pRJMTKuwxd1IDBP4rSbI5lHzU7SMsQ==}
@@ -5932,7 +5931,7 @@ snapshots:
       is-date-object: 1.1.0
       is-symbol: 1.1.1
 
-  es-toolkit@1.38.0: {}
+  es-toolkit@1.40.0: {}
 
   esbuild@0.25.10:
     optionalDependencies:
