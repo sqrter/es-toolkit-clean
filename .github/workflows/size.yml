@@ -9,31 +9,16 @@ jobs:
       CI_JOB_NUMBER: 1
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Use Node 22
-        uses: actions/setup-node@v3
+      - name: Use Node 24
+        uses: actions/setup-node@v4
         with:
-          node-version: 22.x
-
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        run: |
-          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
-
-      - name: Setup pnpm cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+          node-version: 24.x
+          cache: 'npm'
 
       - name: Install deps (with cache)
-        run: pnpm install
+        run: npm ci
 
       - uses: andresz1/size-limit-action@v1
         with:
