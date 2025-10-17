@@ -8,15 +8,15 @@ on:
         required: false
         default: main
 
-permissions:
-  id-token: write  # Required for OIDC
-  contents: read
-  
 jobs:
   release:
     name: Build, lint, test, release the library.
     runs-on: ubuntu-latest
-
+    permissions:
+      id-token: write  # Required for OIDC
+      contents: write
+      issues: write
+      pull-requests: write
     steps:
       - name: Checkout
         uses: actions/checkout@v3

@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node: ['22.x']
+        node: ['24.x']
         os: [ubuntu-latest]
 
     steps:
@@ -23,10 +23,10 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
-      - name: Use Node 22
+      - name: Use Node 24
         uses: actions/setup-node@v3
         with:
-          node-version: 22.x
+          node-version: 24.x
 
       - name: Get pnpm store directory
         id: pnpm-cache

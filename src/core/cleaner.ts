@@ -40,8 +40,8 @@ export function createCleaner(
   processorConfig: Partial<ProcessorConfig> | ((defaultProcessors: ProcessorConfig) => CleanerFunction),
 ): (node: unknown) => unknown {
   const processor: CleanerFunction = isFunction(processorConfig)
-    ? (processorConfig(defaultProcessors) as CleanerFunction)
-    : createProcessor(processorConfig as Partial<ProcessorConfig>)
+    ? processorConfig(defaultProcessors)
+    : createProcessor(processorConfig)
 
   return (node: unknown) => processor(node, processor)
 }
