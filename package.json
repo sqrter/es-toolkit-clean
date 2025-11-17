@@ -74,7 +74,7 @@
   "devDependencies": {
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
-    "@eslint/compat": "^1.4.0",
+    "@eslint/compat": "^2.0.0",
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.38.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
@@ -82,12 +82,12 @@
     "@semantic-release/git": "^10.0.1",
     "@size-limit/preset-big-lib": "^11.2.0",
     "@types/node": "^24.8.1",
-    "@vitest/coverage-v8": "3.2.4",
+    "@vitest/coverage-v8": "4.0.10",
     "commitizen": "^4.3.1",
     "cz-conventional-changelog": "^3.3.0",
     "devmoji": "^2.3.0",
     "es-toolkit": "^1.40.0",
-    "esbuild": "^0.25.11",
+    "esbuild": "^0.27.0",
     "eslint": "^9.38.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
@@ -98,7 +98,7 @@
     "husky": "^9.1.7",
     "is-ci": "^4.1.0",
     "lint-staged": "^16.2.4",
-    "open": "^10.2.0",
+    "open": "^11.0.0",
     "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
     "semantic-release": "^25.0.0",
@@ -108,7 +108,7 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.1",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.2.4"
+    "vitest": "^4.0.10"
   },
   "size-limit": [
     {
